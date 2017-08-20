@@ -1,14 +1,14 @@
-# Contributing to HABPanel
+# Contributing to Flows Builder
 
-Want to hack on HABPanel? Awesome!
+Want to hack on Flows Builder? Awesome!
 Here are instructions to get you started. They are similar to those of openHAB itself.
 
 ## Reporting Issues
 
-Please report [HABPanel specific issues here](https://github.com/ghys/flowsbuilder/issues),
+Please report [Flows Builder specific issues here](https://github.com/ghys/flowsbuilder/issues),
 while issues that are related to openHAB2 or Eclipse SmartHome should be reported in the
 [openHAB2 GitHub repository](https://github.com/openhab/openhab2/issues) or the
-[bugzilla of Eclipse SmartHome](https://bugs.eclipse.org/bugs/buglist.cgi?product=SmartHome&component=Core), respectively.
+[Eclipse SmartHome repository](https://github.com/eclipse/smarthome/issues), respectively.
 Do not worry, if you are not clear, which category your issue belongs to - we will
 redirect you, if necessary.
 
@@ -17,7 +17,7 @@ redirect you, if necessary.
 It is assumed you have ```npm```, ```bower``` and ```gulp``` available; if not,
 check their respective docs.
 
-To build the Javascript part of HABPanel, navigate to the ```web/``` subfolder, then:
+To build the Javascript part of Flows Builder, navigate to the ```web/``` subfolder, then:
 1. Run ```npm install```
 2. Run ```bower install```
 3. Run ```gulp```
