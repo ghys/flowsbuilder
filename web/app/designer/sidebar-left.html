@@ -1,0 +1,76 @@
+<div>
+
+  <uib-accordion close-others="false">
+
+    <!-- Triggers Group -->
+
+    <uib-accordion-group ng-init="triggerGroup.open = true" is-open="triggerGroup.open">
+
+      <uib-accordion-heading>
+        Triggers
+        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': triggerGroup.open,
+          'glyphicon-chevron-right': !triggerGroup.open}">
+        </i>
+      </uib-accordion-heading>
+
+      <div ng-repeat="module in vm.module_types.triggers | filter: {visibility: 'VISIBLE'}">
+        <div class="fc-node">
+          <div id="module-{{module.uid}}" class="innerNode trigger draggable" toolbox-draggable>
+            <p>When {{module.label}}</p>
+          </div>
+        </div>
+        <br />
+      </div>
+
+    </uib-accordion-group>
+
+    <!-- Conditions Group -->
+
+    <uib-accordion-group ng-init="conditionsGroup.open = true" is-open="conditionsGroup.open">
+
+      <uib-accordion-heading>
+        Conditions
+        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': conditionsGroup.open,
+          'glyphicon-chevron-right': !conditionsGroup.open}">
+        </i>
+      </uib-accordion-heading>
+
+      <div ng-repeat="module in vm.module_types.conditions | filter: {visibility: 'VISIBLE'}">
+        <div class="fc-node">
+          <div id="module-{{module.uid}}" class="innerNode condition draggable" toolbox-draggable>
+            <p>If {{module.label}}</p>
+          </div>
+        </div>
+        <br />
+      </div>
+
+    </uib-accordion-group>
+
+
+    <!-- Actions Group -->
+
+    <uib-accordion-group ng-init="actionsGroup.open = true" is-open="actionsGroup.open">
+
+      <uib-accordion-heading>
+        Actions
+        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': actionsGroup.open,
+          'glyphicon-chevron-right': !actionsGroup.open}">
+        </i>
+      </uib-accordion-heading>
+
+      <div ng-repeat="module in vm.module_types.actions | filter: {visibility: 'VISIBLE'}">
+        <div class="fc-node">
+          <div id="module-{{module.uid}}" class="innerNode action draggable" toolbox-draggable>
+            <p>{{module.label}}</p>
+          </div>
+        </div>
+        <br />
+      </div>
+
+    </uib-accordion-group>    
+
+  </uib-accordion>
+
+</div>
+
+

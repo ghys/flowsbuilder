@@ -1,0 +1,55 @@
+<div class="form-group" ng-repeat="confdesc in vm.configDescriptions">
+  <label for="control-{{vm.node.id}}-{{confdesc.name}}" class="control-label">{{confdesc.label}}</label>
+
+    <!-- single text, no options provided -->
+    <div ng-if="confdesc.type === 'TEXT' && !confdesc.multiple && !confdesc.options.length" ng-switch="confdesc.context">
+      <!-- item context -->
+      <item-picker ng-switch-when="item" ng-model="vm.node.module_config[confdesc.name]"></item-picker>
+      <!-- script context (temp) -->
+      <!--<textarea ng-switch-when="script" ng-model="vm.node.module_config[confdesc.name]" class="form-control"></textarea>-->
+      <modal-script-editor ng-switch-when="script" ng-model="vm.node.module_config[confdesc.name]" button-style="true" dialog-title="Edit script" label="Edit script..."></modal-script-editor>
+      <!-- time context -->
+      <!--<input ng-switch-when="time" type="text" class="form-control" uib-datepicker-popup="HH:mm" ng-model="vm.node.module_config[confdesc.name]"></input>-->
+
+      <!-- simple text -->
+      <input ng-switch-default type="text" class="form-control" ng-model="vm.node.module_config[confdesc.name]"></input>
+    </div>
+
+    <!-- single text, options provided, limit to options -->
+    <div ng-if="confdesc.type === 'TEXT' && confdesc.options.length && confdesc.limitToOptions && !confdesc.multiple">
+      <ui-select ng-model="vm.node.module_config[confdesc.name]" theme="bootstrap">
+        <ui-select-match>{{$select.selected.value}}</ui-select-match>
+        <ui-select-choices repeat="option.value as option in confdesc.options">
+          {{option.label}}
+        </ui-select-choices>
+      </ui-select>
+    </div>
+
+    <!-- single text, option provided, don't limit to options -->
+    <input ng-if="confdesc.type === 'TEXT' && confdesc.options.length && !confdesc.limitToOptions" ng-model="vm.node.module_config[confdesc.name]"
+           uib-typeahead="option.value as option.label for option in confdesc.options" class="form-control" typeahead-show-hint="true" typeahead-min-length="0" />
+
+    <!-- multiple text, options provided -->
+    <div ng-if="confdesc.type === 'TEXT' && confdesc.options.length && confdesc.limitToOptions && confdesc.multiple">
+      <ui-select multiple ng-model="vm.node.module_config[confdesc.name]" theme="bootstrap">
+        <ui-select-match>{{$select.selected.value}}</ui-select-match>
+        <ui-select-choices repeat="option in confdesc.options">
+          {{option.label}}
+        </ui-select-choices>
+      </ui-select>
+    </div>
+
+    <!-- multiple, day of week context -->
+    <days-of-week-picker ng-model="vm.node.module_config[confdesc.name]" ng-if="confdesc.type === 'TEXT' && confdesc.multiple && confdesc.context === 'dayOfWeek'"></days-of-week-picker>
+
+    <!-- multiple, rules context -->
+    <div ng-model="vm.node.module_config[confdesc.name]" ng-if="confdesc.type === 'TEXT' && confdesc.multiple && confdesc.context === 'rule'" class="alert alert-warning">TODO: rules picker... Don't use this module for now.</div>
+
+    <!-- boolean -->
+    <input ng-if="confdesc.type === 'BOOLEAN'" name="control-{{vm.node.id}}-{{confdesc.name}}" type="checkbox" style="float:left; margin-right: 5px;" ng-model="vm.node.module_config[confdesc.name]"></input>
+
+    <!--<button class="btn btn-default pull-left" ng-if="confdesc.type === 'BOOLEAN'" ng-model="vm.node.module_config[confdesc.name]" uib-btn-checkbox>
+      <i class="glyphicon" ng-class="{ 'glyphicon-unchecked': !vm.node.module_config[confdesc.name], 'glyphicon-check': vm.node.module_config[confdesc.name] }"></i>
+    </button>-->
+   <div><small>{{confdesc.description}}</small></div>
+</div>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app="app">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{{(currentFlowId) ? currentFlowId + ' - ' : ''}}Flows Builder</title>
+    <meta name="description" content="Flows editor for Eclipse SmartHome and openHAB" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!--<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'sha256-5hvlzGKhlKhafFjW6G/cRVpM/e+JewYxe/pLpQ5Kj9M='; style-src 'self' 'unsafe-inline';">-->
+
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="vendor/styles.min.css" />
+    <link rel="stylesheet" ng-href="assets/styles/themes/{{settings.theme || 'default'}}.css" />
+    <link rel="manifest" href="manifest.json" />
+
+
+    <script src="vendor/vendor.js"></script>
+
+    <script src="app/services/services.js"></script>
+    <script src="app/services/modulestypes-ext.service.js"></script>
+    <script src="app/services/storage.service.js"></script>
+    <script src="app/services/items.service.js"></script>
+    <script src="app/services/flow.service.js"></script>
+    <script src="app/services/ruleengine.service.js"></script>
+    <script src="app/services/localfile.service.js"></script>
+    <script src="app/services/flowcompiler.service.js"></script>
+
+    <script src="app/shared/shared.js"></script>
+    <script src="app/shared/dragdrop.directive.js"></script>
+    <script src="app/shared/resize.directive.js"></script>
+    <script src="app/shared/itempicker.directive.js"></script>
+    <script src="app/shared/scripteditor.directive.js"></script>
+    <script src="app/shared/config-form.directive.js"></script>
+
+    <script src="app/app.js"></script>
+    <script src="app/designer/designer.controller.js"></script>
+
+</head>
+
+<body ng-keydown="keyDown($event)" ng-keyup="keyUp($event)">
+    <div class="reconnecting" ng-if="reconnecting">
+        &nbsp;<i class="glyphicon glyphicon-ban-circle"></i>&nbsp;Connection lost! Trying to reconnect...&nbsp;
+    </div>
+    <div ng-view></div>
+</body>
+
+</html>

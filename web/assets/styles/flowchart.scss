@@ -1,0 +1,235 @@
+.fc-canvas {
+  position: relative;
+  min-width: 800px;
+  min-height: 800px;
+  width: calc(100%);
+  height: calc(100%) - 10px;
+}
+
+.fc-canvas svg {
+  position: relative;
+  min-width: 800px;
+  min-height: 800px;
+  width: 100%;
+  height: 100%;
+}
+
+.button-overlay {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  z-index: 10;
+}
+
+.button-overlay button {
+  display: block;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: none;
+  color: #fff;
+  font-size: 20px;
+  background-color: #F15B26;
+}
+
+.button-overlay button:hover:not(:disabled) {
+  border: 4px solid #b03911;
+  border-radius: 5px;
+
+  margin: -4px;
+  margin-bottom: 11px;
+}
+
+.button-overlay button:disabled {
+  -webkit-filter: brightness(70%);
+  filter: brightness(70%);
+}
+
+.fc-node {
+  z-index: 1;
+}
+
+.innerNode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100px;
+  border-radius: 5px;
+
+  background-color: #F15B26;
+  color: #fff;
+  font-size: 13px;
+
+  &.trigger {
+    border-radius: 15px;
+    background-color: #F15B26;
+  }
+
+  &.condition {
+    background: #070; /* fallback */
+    background:
+      linear-gradient(135deg, transparent 10px, #070 0) top left,
+      linear-gradient(225deg, transparent 10px, #070 0) top right,
+      linear-gradient(315deg, transparent 10px, #070 0) bottom right,
+      linear-gradient(45deg,  transparent 10px, #070 0) bottom left;
+    background-size: 51% 51%;
+    background-repeat: no-repeat;
+  }
+
+  &.action {
+    background-color: #66d;
+  }
+
+  &.draggable {
+    cursor: move;
+  }
+}
+
+.innerNode.trigger {
+  border-radius: 15px;
+  background-color: #F15B26;
+}
+
+.fc-node.fc-hover {
+  -webkit-filter: brightness(70%);
+  filter: brightness(70%);;
+}
+
+.fc-node.fc-selected {
+  -webkit-filter: brightness(70%);
+  filter: brightness(70%);
+}
+
+.fc-node.fc-dragging {
+  z-index: 10;
+}
+
+.fc-node p {
+  padding: 5px 15px;
+  text-align: center;
+  margin: auto;
+}
+
+.fc-topConnectors, .fc-bottomConnectors {
+  position: absolute;
+  left: 0;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+
+  z-index: -10;
+}
+
+.fc-topConnectors {
+  top: -52px;
+}
+
+.fc-bottomConnectors {
+  bottom: -52px;
+}
+
+.fc-magnet {
+  display: flex;
+  flex-grow: 1;
+  height: 60px;
+
+  justify-content: center;
+}
+
+.fc-topConnectors .fc-magnet {
+  align-items: flex-end;
+}
+
+.fc-bottomConnectors .fc-magnet {
+  align-items: flex-start;
+}
+
+.fc-connector {
+  width: 18px;
+  height: 18px;
+
+//   border: 10px solid transparent;
+  -moz-background-clip: padding; /* Firefox 3.6 */
+  -webkit-background-clip: padding; /* Safari 4? Chrome 6? */
+  background-clip: padding-box;
+  border-radius: 50% 50%;
+  background-color: #F7A789;
+  color: #fff;
+
+  &.path-true {
+    background-color: #090;
+  }
+  &.path-false {
+    background-color: #900;
+  }
+}
+
+.fc-connector.fc-hover {
+  background-color: #000;
+}
+
+.fc-edge {
+  stroke: gray;
+  stroke-width: 4;
+  fill: transparent;
+}
+
+.fc-edge.fc-hover {
+  stroke: gray;
+  stroke-width: 6;
+  fill: transparent;
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 500;
+  }
+}
+
+.fc-edge.fc-selected {
+  stroke: red;
+  stroke-width: 4;
+  fill: transparent;
+}
+
+.fc-edge.fc-active {
+  animation: dash 3s linear infinite;
+  stroke-dasharray: 20;
+}
+
+.fc-edge.fc-dragging {
+  pointer-events: none;
+}
+
+.edge-endpoint {
+  fill: gray;
+}
+
+.fc-nodedelete {
+  display: none;
+}
+
+.fc-selected .fc-nodedelete {
+  display: block;
+  position: absolute;
+  right: -13px;
+  top: -13px;
+  border: solid 2px white;
+  cursor: pointer;
+
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 0.8;
+
+  height: 25px;
+  padding-top: 2px;
+  width: 27px;
+
+  background: #494949;
+  color: #fff;
+  text-align: center;
+}
+

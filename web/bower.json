@@ -1,0 +1,51 @@
+{
+  "name": "esh-flowsbuilder",
+  "version": "1.0.0",
+  "homepage": "https://github.com/ghys/org.openhab.ui.flowseditor",
+  "authors": [
+    "Yannick Schaus"
+  ],
+  "description": "Dashboard user interface for openHAB",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "dashboard",
+    "panel",
+    "openhab",
+    "smarthome",
+    "ui"
+  ],
+  "license": "EPL",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.5.11",
+    "angular-bootstrap": "^1.x",
+    "angular-prompt": "~1.2",
+    "angular-local-storage": "~0.4.0",
+    "angular-route": "~1.5.11",
+    "angular-sanitize": "~1.5.11",
+    "angular-touch": "~1.5.11",
+    "angularjs-slider": "~5.4.3",
+    "angular-ui-codemirror": "~0.3.0",
+    "oclazyload": "ocLazyLoad#~1.0.9",
+    "angular-clipboard": "~1.5.0",
+    "bootstrap-sass": "^3.3.7",
+    "roboto-fontface": "^0.5.0",
+    "angular-ui-clock": "latest",
+    "angular-file-saver": "~1.1.2",
+    "event-source-polyfill": "latest",
+    "angular-ui-select": "^0.19.6",
+    "selectize": "~0.12.4",
+    "ngFlowchart": "^0.5.1"
+  },
+  "resolutions": {
+    "angular": "~1.5.11"
+  }
+}

@@ -1,0 +1,114 @@
+<nav class="navbar navbar-default navbar-fixed-top toolbar">
+  <form class="navbar-form navbar-left">
+
+    <div class="btn-group" role="group">
+
+      <button type="button" class="btn btn-default" ng-click="vm.newFlow()" uib-tooltip="New flow" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-file"></span>
+      </button>
+
+      <div class="btn-group" role="group">
+        <div class="btn btn-default dropdown" uib-dropdown uib-dropdown-toggle uib-tooltip="Switch current flow" tooltip-placement="right" tooltip-append-to-body="true">
+          <span class="dropdown-toggle" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-random"></span>&nbsp;&nbsp;{{vm.currentFlowId}} <b class="caret"></b>
+          </span>
+          <ul class="dropdown-menu" role="menu">
+            <li ng-repeat="flowId in vm.flowIds">
+              <a href="" ng-click="vm.switchFlow(flowId)">
+                <!--<span class="glyphicon glyphicon-share-alt" style="transform: scale(-1, 1);"></span>&nbsp;-->{{flowId}}
+              </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href="" ng-click="vm.deleteFlow()">
+                <span class="glyphicon glyphicon-trash"></span>&nbsp;Delete this flow...
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-default" ng-click="vm.saveFlow()" uib-tooltip="Save" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <span class="glyphicon" ng-class="{ 'glyphicon-saved': vm.justSaved, 'glyphicon-save': !vm.justSaved }"></span>
+      </button>
+      
+    </div>
+
+    <div class="btn-group" role="group">
+
+      <button type="button" class="btn btn-default" disabled="disabled" uib-tooltip="Undo" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-share-alt" style="transform: scale(-1, 1);"></span>
+      </button>
+      <button type="button" class="btn btn-default" disabled="disabled" uib-tooltip="Redo" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-share-alt" style="transform: scale(1, 1);"></span>
+      </button>
+
+    </div>    
+
+    <button type="button" class="btn btn-default" ng-click="" disabled="disabled" uib-tooltip="Snap to grid" tooltip-placement="bottom" tooltip-append-to-body="true">
+      <span class="glyphicon glyphicon-th"></span>
+    </button>
+
+    <!--
+    <div class="btn-group" role="group">
+
+      <button type="button" class="btn btn-default" disabled="disabled"
+              uib-tooltip="{{ 'CUT' }}"> <span class="glyphicon glyphicon-asterisk"></span>
+      </button>
+      <button type="button" class="btn btn-default" disabled="disabled"
+              uib-tooltip="{{ 'COPY' }}"> <span class="glyphicon glyphicon-asterisk"></span>
+      </button>
+      <button type="button" class="btn btn-default" disabled="disabled"
+              uib-tooltip="{{ 'PASTE' }}"> <span class="glyphicon glyphicon-asterisk"></span>
+      </button>
+
+    </div>
+
+     <label class="btn btn-primary" uib-tooltip="{{ 'SEND_BACKWARD' }}" tooltip-append-to-body="true">
+        <span class="fa fa-toggle-left fa-lg fa-fw"></span>
+      </label>
+
+    -->
+
+    <div class="btn-group" role="group">
+
+      <button type="button" class="btn btn-success" ng-click="vm.buildFlow()" uib-tooltip="Compile and verify the validity of the flow without publishing rules" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-ok-circle"></span>&nbsp;Check
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="vm.publishFlow()" uib-tooltip="Compile, verify the flow then publish the resulting rules to the rule engine" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-download"></span>&nbsp;Publish
+      </button>
+      <button type="button" class="btn btn-warning" ng-click="vm.runFlow()" disabled="disabled" uib-tooltip="Compile, publish if necessary then run the flow" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-play-circle"></span>
+      </button>
+      <button type="button" class="btn btn-danger" ng-click="vm.unpublishFlow()" uib-tooltip="Unpublish rules from the rule engine" tooltip-placement="bottom" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-remove-circle"></span>
+      </button>
+
+    </div>
+
+  </form>
+</nav>
+
+
+<!--
+
+<div class="btn-group" role="group">
+  <button type="button" class="btn btn-default" ng-click="main.bringForward()"
+          uib-tooltip="{{ 'BRING_FORWARD' }}" tooltip-placement="bottom">
+    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+  </button>
+  <button type="button" class="btn btn-default" ng-click="main.sendBackward()"
+          uib-tooltip="{{ 'SEND_BACKWARD' }}" tooltip-placement="bottom">
+    <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+  </button>
+</div>
+
+<button type="button" class="btn btn-default" ng-click="main.bringToFront()">
+  <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
+</button>
+<button type="button" class="btn btn-default" ng-click="main.sendToBack()">
+  <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
+</button>
+
+-->

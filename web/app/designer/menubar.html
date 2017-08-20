@@ -1,0 +1,162 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+  <img src="assets/manifest/logo36.png" class="pull-left" style="margin-top: 8px;"></img>
+
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <span class="navbar-brand" href="">Flows Builder</span>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
+
+    <ul class="nav navbar-nav">
+
+      <li class="dropdown" uib-dropdown>
+        <a href="" uib-dropdown-toggle class="dropdown-toggle" data-toggle="dropdown">
+          File <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a href="" ng-click="vm.newFlow()">
+              <span class="glyphicon glyphicon-file"></span>&nbsp;New flow
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="" ng-click="vm.saveFlow()"><span class="glyphicon glyphicon-save"></span>&nbsp;Save flow</a>
+          </li>
+          <li>
+            <a href="" ng-click="vm.saveFlowAs()"><span class="glyphicon glyphicon-import"></span>&nbsp;Save flow as...</a>
+          </li>
+          <li class="divider"></li>
+          <li class="disabled">
+            <a href=""><span class="glyphicon glyphicon-floppy-open"></span>&nbsp;Import from file... <small>(todo)</small></a>
+          </li>
+          <li class="disabled">
+            <a href=""><span class="glyphicon glyphicon-upload"></span>&nbsp;Import from existing rule... <small>(todo)</small></a>
+          </li>
+          <li>
+            <a href="" ng-click="vm.exportToFile()"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;Download as file</a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="" ng-click="vm.deleteFlow()"><span class="glyphicon glyphicon-trash"></span>&nbsp;Delete this flow...</a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="/"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Return to the dashboard</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="dropdown" uib-dropdown>
+        <a href="" uib-dropdown-toggle class="dropdown-toggle" data-toggle="dropdown">
+          Edit <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li class="disabled">
+            <a href="">
+              <span class="glyphicon glyphicon-share-alt" style="transform: scale(-1, 1);"></span>&nbsp;Undo<small> (todo)</small>
+            </a>
+          </li>
+          <li class="disabled">
+            <a href="">
+              <span class="glyphicon glyphicon-share-alt" style="transform: scale(1, 1);"></span>&nbsp;Redo<small> (todo)</small>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="" ng-click="vm.modelservice.deleteSelected()">
+              <span class="glyphicon glyphicon-remove"></span>&nbsp;Delete
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="dropdown" uib-dropdown>
+        <a href="" uib-dropdown-toggle class="dropdown-toggle" data-toggle="dropdown">
+          View <b class="caret"></b></a>
+        <ul class="dropdown-menu" role="menu">
+          <li class="disabled">
+            <a href="">
+              <span class="glyphicon glyphicon-th"></span>&nbsp;Show grid<small> (todo)</small>
+            </a>
+          </li>
+          <li class="disabled">
+            <a href="">
+              <span class="glyphicon glyphicon-magnet"></span>&nbsp;Snap to grid<small> (todo)</small>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="dropdown" uib-dropdown>
+        <a href="" uib-dropdown-toggle class="dropdown-toggle" data-toggle="dropdown">
+          Flow <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a href="" ng-click="vm.publishFlow()"><span class="glyphicon glyphicon-download"></span>&nbsp;Build and publish</a>
+          </li>
+          <li>
+            <a href="" ng-click="vm.buildFlow()"><span class="glyphicon glyphicon-ok-circle"></span>&nbsp;Build only</a>
+          </li>
+          <li class="divider"></li>
+          <li class="disabled">
+            <a href="" ng-click="vm.runFlow()" ng-click=""><span class="glyphicon glyphicon-play-circle"></span>&nbsp;Build and run <small>(todo)</small></a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="" ng-click="vm.unpublishFlow()" ng-click=""><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Unpublish</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="dropdown" uib-dropdown>
+        <a href="" uib-dropdown-toggle class="dropdown-toggle" data-toggle="dropdown">
+          Options <b class="caret"></b></a>
+        <ul class="dropdown-menu" role="menu">
+          <li class="disabled">
+            <a href="">Nothing yet</a>
+          </li>
+        </ul>
+      </li>
+
+      <!--<li class="dropdown" uib-dropdown>
+        <a href="" uib-dropdown-toggle class="dropdown-toggle" data-toggle="dropdown">
+          {{ 'LANGUAGE' }} <b class="caret"></b></a>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a href="" ng-click="main.switchLanguage('en')" ng-bind="{{ 'ENGLISH' }}"></a>
+          </li>
+          <li>
+            <a href="" ng-click="main.switchLanguage('de')" ng-bind="{{ 'GERMAN' }}"></a>
+          </li>
+          <li>
+            <a href="" ng-click="main.switchLanguage('pl')" ng-bind="{{ 'POLISH' }}"></a>
+          </li>
+        </ul>
+      </li>-->
+
+      <li class="dropdown" uib-dropdown>
+        <a href="" uib-dropdown-toggle class="dropdown-toggle" data-toggle="dropdown">
+          Help <b class="caret"></b></a>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a target="_blank" href="https://community.openhab.org/"><span class="glyphicon glyphicon-question-sign"></span>&nbsp;Community forum</a>
+          </li>
+        </ul>
+      </li>
+
+    </ul>
+
+  </div><!-- /.navbar-collapse -->
+</nav>
+

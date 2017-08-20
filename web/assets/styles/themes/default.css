@@ -1,0 +1,8 @@
+:root {
+    /* Basic styles */
+    --body-bg: #f5f5f5;
+    --body-color: #000;
+    --primary-color: #f15b26;
+    --box-bg: #234;
+    --header-bg: var(--body-bg);
+}

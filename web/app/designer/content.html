@@ -1,0 +1,4 @@
+<div ng-if="vm.showFlow" class="content" ng-style="style()" resize toolbox-droppable drop="vm.addNode">
+    <fc-canvas model="vm.model" selected-objects="vm.flowchartselected" edge-style="curved" callbacks="vm.callbacks"
+            automatic-resize="true"></fc-canvas>
+</div>

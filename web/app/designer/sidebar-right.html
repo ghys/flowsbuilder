@@ -1,0 +1,105 @@
+
+<uib-accordion close-others="false" ng-show="(vm.flowchartselected | filter:{'module_type_uid':'!!'}).length" class="hidden-sm hidden-xs">
+  <uib-accordion-group class="accordion-panel" ng-init="formatShape.open = true" is-open="formatShape.open"
+        ng-repeat="node in (vm.flowchartselected | filter:{'module_type_uid':'!!'})">
+
+    <uib-accordion-heading>
+      Node {{node.id}} <small>({{node.module_type_uid}})</small>
+      <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': formatShape.open,
+          'glyphicon-chevron-right': !formatShape.open}">
+      </i>
+    </uib-accordion-heading>
+
+    <uib-tabset justified="true">
+      <uib-tab heading="Configuration">
+        <br />
+        <div class="tab-content">
+          <form name="nodeForm-{{node.id}}">
+            <div class="form-group">
+              <label class="control-label">Name</label>
+              <input type="text" class="form-control" ng-model="node.name" ng-required="true" placeholder="{{node.name || vm.callbacks.nodeCallbacks.getDefaultNodeLabel(node) }}"></input>
+              <div><small>Leave blank to use the default (computed) name:<br /><em>"{{vm.callbacks.nodeCallbacks.getDefaultNodeLabel(node)}}"</em></small></div>
+            </div>
+            <div class="form-group">
+              <label class="control-label">Description</label>
+              <input type="text" class="form-control" ng-model="node.description" ng-required="true" placeholder="Optional"></input>
+            </div>
+            <hr />
+            <h4>Module configuration</h4>
+
+            <config-form node="node" module-type="vm.getNodeModuleType(node)"></config-form>
+          </form>
+        </div>
+      </uib-tab>
+
+      <uib-tab heading="Description">
+        <br />
+        <div class="tab-content">
+          {{vm.getNodeModuleType(node).description}}
+        </div>
+      </uib-tab>
+
+    </uib-tabset>
+
+  </uib-accordion-group>
+</uib-accordion>
+
+<uib-accordion close-others="false" ng-hide="(vm.flowchartselected | filter:{'module_type_uid':'!!'}).length" class="hidden-sm hidden-xs">
+  <uib-accordion-group class="accordion-panel" ng-init="configFlow.open = true" is-open="configFlow.open">
+    <uib-accordion-heading>
+      Flow <small>({{vm.currentFlowId}})</small>
+      <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': configFlow.open,
+          'glyphicon-chevron-right': !formatShape.open}">
+      </i>
+    </uib-accordion-heading>
+
+    <uib-tabset justified="true" active="vm.activeNodeConfigTab">
+      <uib-tab heading="Properties" index="0">
+        <br />
+        <div class="tab-content">
+          <form name="flowForm">
+            <div class="form-group">
+              <label class="control-label">Name</label>
+              <input type="text" class="form-control" ng-model="vm.model.name" ng-required="true"></input>
+            </div>
+            <div class="form-group">
+              <label class="control-label">Description</label>
+              <input type="text" class="form-control" ng-model="vm.model.description" ng-required="true" placeholder="Optional"></input>
+            </div>
+          </form>
+        </div>
+      </uib-tab>
+
+      <uib-tab heading="Build output" index="1">
+        <br />
+        <div class="tab-content">
+          <div class="col-sm-12" ng-if="vm.publishResultClass">
+            <uib-progress max="vm.publishRequests.length" animate="false">
+              <uib-bar type="{{vm.publishResultClass}}" value="(vm.publishRequests | filter:{$: 'DELETE'}).length">{{(vm.publishRequests | filter:{$: 'DELETE'}).length}} rule(s) deleted</uib-bar>
+              <uib-bar type="{{vm.publishResultClass}}" value="(vm.publishRequests | filter:{$: 'POST'}).length">{{(vm.publishRequests | filter:{$: 'POST'}).length}} rule(s) added</uib-bar>
+            </uib-progress>
+          </div>
+
+          <!--<ul>
+            <li ng-repeat="request in vm.publishRequests">
+              {{request.status}} {{request.statusText}} - {{request.config.method}} {{request.config.url}}
+            </li>
+          </ul>-->
+          <small class="col-sm-12">
+            <ul style="padding-left: 0">
+              <li ng-repeat="line in vm.lastBuildLogs" ng-class="{ 'bg-danger': line.level === 'ERROR', 'bg-info': line.level === 'INFO' }">{{line.message}}</li>
+            </ul>
+            <div ng-if="vm.lastBuildError" class="text-danger"><strong>Build failed<strong></div>
+            <div ng-if="!vm.lastBuildError && vm.lastBuildResult.length > 0"><strong>Built {{vm.lastBuildResult.length}} rule(s) successfully</strong>
+            <br />
+            <modal-script-editor ng-model="vm.lastBuildResult" json="true" button-style="false" readonly="true" dialog-title="Flow build results" label="View"></modal-script-editor></div>
+
+            <!--<pre ng-repeat="rule in vm.lastBuildResult" style="font-size: 8pt">{{rule | json:1 }}</pre>-->
+          </small>
+        </div>
+      </uib-tab>
+
+    </uib-tabset>
+
+  </uib-accordion-group>
+</uib-accordion>

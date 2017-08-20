@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-description:config-descriptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config-description="http://eclipse.org/smarthome/schemas/config-description/v1.0.0"
+	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/config-description/v1.0.0
+        http://eclipse.org/smarthome/schemas/config-description-1.0.0.xsd">
+
+	<config-description uri="ui:flowsbuilder">
+		<parameter name="flowsRegistry" type="text" required="true">
+		    <context>script</context>
+			<label>Flows registry JSON</label>
+			<description>JSON object containing the registry of flows. Normally only modified with the designer, edit by hand at your own risk!</description>
+		</parameter>
+        <parameter name="currentFlow" type="text" required="false">
+            <default></default>
+            <label>Current flow ID</label>
+            <description>The ID of the existing flow to show at startup. Set by the designer.</description>
+        </parameter>
+	</config-description>
+
+</config-description:config-descriptions>
