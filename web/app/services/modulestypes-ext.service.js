@@ -28,8 +28,9 @@
             },
             'core.ItemStateChangeTrigger': {
                 defaultLabel: function (moduletype, config) {
-                    if (!config.itemName || !config.previousState) return;
-                    return 'When ' + config.itemName + ' changed from ' + config.previousState +
+                    if (!config.itemName) return;
+                    return 'When ' + config.itemName + ' changed' +
+                        ((config.previousState) ? ' from ' + config.previousState : '') +
                         ((config.state) ? ' to ' + config.state : '');
                 }
             },

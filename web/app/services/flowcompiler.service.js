@@ -133,7 +133,7 @@
                 case 'trigger':
                     // add the trigger to current rule
                     context.currentRule.triggers.push({
-                        id: context.ruleModuleUidCounter++,
+                        id: node.id,
                         label: nodeName,
                         description: node.description,
                         configuration: node.module_config,
@@ -150,7 +150,7 @@
                         if (parentNode.type !== 'action') {
                             // parent is trigger or another condition: simply add this condition to the current rule
                             context.currentRule.conditions.push({
-                                id: context.ruleModuleUidCounter++,
+                                id: node.id,
                                 label: nodeName,
                                 description: node.description,
                                 configuration: angular.copy(node.module_config),
@@ -167,7 +167,7 @@
 
                             // create the 'run rules' action in the current rule
                             context.parentRule.actions.push({
-                                id: context.ruleModuleUidCounter++,
+                                id: node.id,
                                 label: 'Proceed to condition: ' + nodeName,
                                 description: 'Run next rule: ' + nextRuleUid,
                                 inputs: {},
@@ -186,7 +186,7 @@
 
                             // add the condition to the new rule
                             context.currentRule.conditions.push({
-                                id: context.ruleModuleUidCounter++,
+                                id: node.id,
                                 label: nodeName,
                                 description: node.description,
                                 configuration: angular.copy(node.module_config),
@@ -206,7 +206,7 @@
 
                         // create the 'run rules' action in the current rule
                         context.parentRule.actions.push({
-                            id: context.ruleModuleUidCounter++,
+                            id: node.id,
                             label: 'Proceed to condition: ' + nodeName,
                             description: 'Run next rules: ' + nextRuleUidThen + ' & ' + nextRuleUidElse,
                             inputs: {},
@@ -304,12 +304,12 @@
                 // Start with all the trigger nodes
                 var triggers = $filter('filter')(flow.nodes, { type: 'trigger' });
                 angular.forEach(triggers, function (trigger) {
-                    context.ruleUidPrefix = flowid + '_' + trigger.id;
+                    context.ruleUidPrefix = flowid + ':' + trigger.id;
 
                     createRule(context.ruleUidPrefix,
                         (flow.name || flowid) + ' - ' + trigger.id + ': ' +
                         (trigger.name || ModulesTypesExtensions.getDefaultLabel(trigger.module_type_uid, trigger.category, trigger.module_config)),
-                        'Created with Flows Builder - will be overwritten if the workflow is published again',
+                        flow.description || 'Created with Flows Builder - will be overwritten if the workflow is published again',
                         context);
 
                     processNode(trigger, null, context);

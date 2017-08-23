@@ -5,8 +5,8 @@
         .module('app.services')
         .service('FlowService', FlowService);
 
-    FlowService.$inject = ['StorageService', 'OH2ServiceConfiguration', '$q'];
-    function FlowService(StorageService, OH2ServiceConfiguration, $q) {
+    FlowService.$inject = ['$rootScope', 'StorageService', 'OH2ServiceConfiguration', '$q'];
+    function FlowService($rootScope, StorageService, OH2ServiceConfiguration, $q) {
         this.getNewFlow = getNewFlow;
         this.getCurrentFlow = getCurrentFlow;
         this.getCurrentFlowId = getCurrentFlowId;
@@ -28,9 +28,12 @@
 
         function getCurrentFlow() {
             // we assume the loading of the OH2ServiceConfiguration has been done before (router's resolve...)
-            return (OH2ServiceConfiguration.flowsRegistry && OH2ServiceConfiguration.flowsRegistry[OH2ServiceConfiguration.currentFlow])
+            if (!$rootScope.currentFlow) {
+                $rootScope.currentFlow = (OH2ServiceConfiguration.flowsRegistry && OH2ServiceConfiguration.flowsRegistry[OH2ServiceConfiguration.currentFlow])
                 ? angular.copy(OH2ServiceConfiguration.flowsRegistry[OH2ServiceConfiguration.currentFlow])
                 : getNewFlow();
+            }
+            return $rootScope.currentFlow;
         }
 
         function getCurrentFlowId() {
@@ -40,6 +43,7 @@
 
         function setCurrentFlowId(id) {
             OH2ServiceConfiguration.currentFlow = id;
+            $rootScope.currentFlow = null;
         }
 
         function getFlowIds() {
@@ -57,7 +61,8 @@
             }
 
             OH2ServiceConfiguration.flowsRegistry[id] = flow;
-            OH2ServiceConfiguration.currentFlow = id;
+            setCurrentFlowId(id);
+            getCurrentFlow();
             StorageService.saveServiceConfiguration().then(function () {
                 deferred.resolve();
             });
@@ -71,11 +76,13 @@
 
             delete OH2ServiceConfiguration.flowsRegistry[OH2ServiceConfiguration.currentFlow];
             if (getFlowIds().length > 0) {
-                OH2ServiceConfiguration.currentFlow = getFlowIds()[0];
+                setCurrentFlowId(getFlowIds()[0]);
             } else {
                 delete OH2ServiceConfiguration.currentFlow;
+                setCurrentFlowId(null);
             }
 
+            getCurrentFlow();
             StorageService.saveServiceConfiguration().then(function () {
                 deferred.resolve();
             });

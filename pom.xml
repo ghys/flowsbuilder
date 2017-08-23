@@ -14,7 +14,7 @@
   <artifactId>org.openhab.ui.flowsbuilder</artifactId>
   <version>2.2.0-SNAPSHOT</version>
 
-  <name>HABPanel user interface</name>
+  <name>Flows Builder user interface</name>
 
   <packaging>eclipse-plugin</packaging>
 
