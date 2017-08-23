@@ -43,7 +43,9 @@
     "event-source-polyfill": "latest",
     "angular-ui-select": "^0.19.6",
     "selectize": "~0.12.4",
-    "ngFlowchart": "^0.5.1"
+    "ngFlowchart": "^0.5.1",
+    "tern": "0.19.0",
+    "acorn-dist": "^3.3.0"
   },
   "resolutions": {
     "angular": "~1.5.11"

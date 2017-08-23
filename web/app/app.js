@@ -15,7 +15,7 @@
         'ngFileSaver',
         'flowchart'
     ])
-    .config(['$routeProvider', 'localStorageServiceProvider', 'NodeTemplatePathProvider', function($routeProvider, localStorageServiceProvider, NodeTemplatePathProvider) {
+    .config(['$routeProvider', '$ocLazyLoadProvider', 'localStorageServiceProvider', 'NodeTemplatePathProvider', function($routeProvider, $ocLazyLoadProvider, localStorageServiceProvider, NodeTemplatePathProvider) {
         localStorageServiceProvider.setStorageType('localStorage');
 
         NodeTemplatePathProvider.setTemplatePath("app/designer/node.html");
@@ -47,6 +47,29 @@
                 redirectTo: '/'
             });
 
+            $ocLazyLoadProvider.config({
+                debug: true,
+                serie: true,
+                modules: [{
+                    name: 'codemirror',
+                    files: [
+                        'vendor/cm/lib/codemirror.css',
+                        'vendor/cm/lib/codemirror.js',
+                        'vendor/cm/theme/rubyblue.css',
+                        'vendor/cm/addon/edit/matchbrackets.js',
+                        'vendor/cm/addon/edit/closebrackets.js',
+                        'vendor/cm/mode/javascript/javascript.js',
+                        'vendor/cm/addon/hint/show-hint.js',
+                        'vendor/cm/addon/hint/show-hint.css',
+                        'vendor/cm/addon/dialog/dialog.js',
+                        'vendor/cm/addon/dialog/dialog.css',
+                        'vendor/cm/addon/tern/tern.js',
+                        'vendor/cm/addon/tern/tern.css',
+                        'vendor/cm/addon/tern/tern-libs.js'
+                    ],
+                    serie: true
+                }]
+            });
     }])
     .run(['$rootScope', '$location', function($rootScope, $location) {
 

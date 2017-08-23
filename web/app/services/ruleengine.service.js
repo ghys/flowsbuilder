@@ -9,6 +9,7 @@
     function RuleEngineService($http, $q, $filter) {
         this.getModuleTypes = getModuleTypes;
         this.getRules = getRules;
+        this.getRulesWithPrefix = getRulesWithPrefix;
         this.unpublishFlow = unpublishFlow;
         this.publishFlow = publishFlow;
         
@@ -48,13 +49,17 @@
             return $http.get('/rest/rules');
         }
 
+        function getRulesWithPrefix(prefix) {
+            return $http.get('/rest/rules', { params: { prefix: prefix }});
+        }
+
         function unpublishFlow(prefix) {
-            return getRules().then(function (resp) {
+            return getRulesWithPrefix(prefix).then(function (resp) {
                 if (resp.data) {
-                    var matchingRules = $filter('filter')(resp.data, function (r) {
-                        return r.uid.indexOf(prefix) === 0;
-                    });
-                    var deleteRequests = matchingRules.map(function (rule) {
+                    // var matchingRules = $filter('filter')(resp.data, function (r) {
+                    //     return r.uid.indexOf(prefix) === 0;
+                    // });
+                    var deleteRequests = resp.data.map(function (rule) {
                         return $http.delete('/rest/rules/' + rule.uid);
                     });
 

@@ -17,12 +17,12 @@
           <form name="nodeForm-{{node.id}}">
             <div class="form-group">
               <label class="control-label">Name</label>
-              <input type="text" class="form-control" ng-model="node.name" ng-required="true" placeholder="{{node.name || vm.callbacks.nodeCallbacks.getDefaultNodeLabel(node) }}"></input>
+              <input type="text" class="form-control" ng-model="node.name" enforce-empty placeholder="{{node.name || vm.callbacks.nodeCallbacks.getDefaultNodeLabel(node) }}"></input>
               <div><small>Leave blank to use the default (computed) name:<br /><em>"{{vm.callbacks.nodeCallbacks.getDefaultNodeLabel(node)}}"</em></small></div>
             </div>
             <div class="form-group">
               <label class="control-label">Description</label>
-              <input type="text" class="form-control" ng-model="node.description" ng-required="true" placeholder="Optional"></input>
+              <input type="text" class="form-control" ng-model="node.description" placeholder="Optional"></input>
             </div>
             <hr />
             <h4>Module configuration</h4>
@@ -60,11 +60,11 @@
           <form name="flowForm">
             <div class="form-group">
               <label class="control-label">Name</label>
-              <input type="text" class="form-control" ng-model="vm.model.name" ng-required="true"></input>
+              <input type="text" class="form-control" ng-model="vm.model.name"></input>
             </div>
             <div class="form-group">
               <label class="control-label">Description</label>
-              <input type="text" class="form-control" ng-model="vm.model.description" ng-required="true" placeholder="Optional"></input>
+              <input type="text" class="form-control" ng-model="vm.model.description" placeholder="Optional"></input>
             </div>
           </form>
         </div>

@@ -109,16 +109,16 @@ gulp.task('codemirror-css', function() {
     ]).pipe(gulp.dest('vendor/cm/lib'));
 });
 
-gulp.task('codemirror-addon-fold', function() {
+gulp.task('codemirror-addon-dialog', function() {
     return gulp.src([
-        'bower_components/codemirror/addon/fold/xml-fold.js',
-    ]).pipe(uglify()).pipe(gulp.dest('vendor/cm/addon/fold'));
+        'bower_components/codemirror/addon/dialog/dialog.js',
+    ]).pipe(uglify()).pipe(gulp.dest('vendor/cm/addon/dialog'));
 });
 
-gulp.task('codemirror-addon-mode', function() {
+gulp.task('codemirror-addon-dialog-resources', function() {
     return gulp.src([
-        'bower_components/codemirror/addon/mode/overlay.js',
-    ]).pipe(uglify()).pipe(gulp.dest('vendor/cm/addon/mode'));
+        'bower_components/codemirror/addon/dialog/dialog.css',
+    ]).pipe(gulp.dest('vendor/cm/addon/dialog'));
 });
 
 gulp.task('codemirror-addon-edit', function() {
@@ -129,6 +129,57 @@ gulp.task('codemirror-addon-edit', function() {
         'bower_components/codemirror/addon/edit/closetag.js',
         'bower_components/codemirror/mode/xml/xml.js'
     ]).pipe(uglify()).pipe(gulp.dest('vendor/cm/addon/edit'));
+});
+
+gulp.task('codemirror-addon-fold', function() {
+    return gulp.src([
+        'bower_components/codemirror/addon/fold/xml-fold.js',
+    ]).pipe(uglify()).pipe(gulp.dest('vendor/cm/addon/fold'));
+});
+
+gulp.task('codemirror-addon-hint', function() {
+    return gulp.src([
+        'bower_components/codemirror/addon/hint/show-hint.js',
+    ]).pipe(uglify()).pipe(gulp.dest('vendor/cm/addon/hint'));
+});
+
+gulp.task('codemirror-addon-hint-resources', function() {
+    return gulp.src([
+        'bower_components/codemirror/addon/hint/show-hint.css',
+    ]).pipe(gulp.dest('vendor/cm/addon/hint'));
+});
+
+gulp.task('codemirror-addon-mode', function() {
+    return gulp.src([
+        'bower_components/codemirror/addon/mode/overlay.js',
+    ]).pipe(uglify()).pipe(gulp.dest('vendor/cm/addon/mode'));
+});
+
+gulp.task('codemirror-addon-tern', function() {
+    return gulp.src([
+        'bower_components/codemirror/addon/tern/tern.js',
+    ]).pipe(uglify()).pipe(gulp.dest('vendor/cm/addon/tern'));
+});
+
+gulp.task('codemirror-addon-tern-libs', function() {
+    return gulp.src([
+        'bower_components/acorn-dist/dist/acorn.js',
+        'bower_components/acorn-dist/dist/acorn_loose.js',
+        'bower_components/acorn-dist/dist/walk.js',
+        'bower_components/tern/lib/signal.js',
+        'bower_components/tern/lib/tern.js',
+        'bower_components/tern/lib/def.js',
+        'bower_components/tern/lib/comment.js',
+        'bower_components/tern/lib/infer.js',
+        'bower_components/tern/plugin/doc_comment.js',
+    ]).pipe(concat('tern-libs.js')).pipe(uglify()).pipe(gulp.dest('vendor/cm/addon/tern'));
+});
+
+gulp.task('codemirror-addon-tern-resources', function() {
+    return gulp.src([
+        'bower_components/codemirror/addon/tern/tern.css',
+        'bower_components/tern/defs/ecma5.json'
+    ]).pipe(gulp.dest('vendor/cm/addon/tern'));
 });
 
 gulp.task('codemirror-mode-xml', function() {
@@ -152,9 +203,16 @@ gulp.task('codemirror-theme', function() {
 gulp.task('codemirror', [
     'codemirror-lib',
     'codemirror-css',
-    'codemirror-addon-fold',
-    'codemirror-addon-mode',
+    'codemirror-addon-dialog',
+    'codemirror-addon-dialog-resources',
     'codemirror-addon-edit',
+    'codemirror-addon-fold',
+    'codemirror-addon-hint',
+    'codemirror-addon-hint-resources',
+    'codemirror-addon-mode',
+    'codemirror-addon-tern',
+    'codemirror-addon-tern-resources',
+    'codemirror-addon-tern-libs',
     'codemirror-mode-xml',
     'codemirror-mode-javascript',
     'codemirror-theme'

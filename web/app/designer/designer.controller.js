@@ -72,6 +72,8 @@
 
 
         $rootScope.keyDown = function (evt) {
+            if ($rootScope.suspendKeyboardShortcuts) return;
+
             if (evt.keyCode === ctrlKeyCode) {
                 ctrlDown = true;
                 evt.stopPropagation();
@@ -87,6 +89,7 @@
         };
 
         $rootScope.keyUp = function (evt) {
+            if ($rootScope.suspendKeyboardShortcuts) return;
 
             if (evt.keyCode === deleteKeyCode) {
                 vm.modelservice.deleteSelected();
@@ -137,7 +140,7 @@
             var newNode = {
                 module_type_uid: moduleType.uid,
                 name : '',
-                id: vm.model.next_node_id++,
+                id: 'N' + (vm.model.next_node_id++).toString(),
                 x: x,
                 y: y,
                 type: category,

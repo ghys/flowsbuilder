@@ -7,7 +7,7 @@
       <item-picker ng-switch-when="item" ng-model="vm.node.module_config[confdesc.name]"></item-picker>
       <!-- script context (temp) -->
       <!--<textarea ng-switch-when="script" ng-model="vm.node.module_config[confdesc.name]" class="form-control"></textarea>-->
-      <modal-script-editor ng-switch-when="script" ng-model="vm.node.module_config[confdesc.name]" button-style="true" dialog-title="Edit script" label="Edit script..."></modal-script-editor>
+      <modal-script-editor ng-switch-when="script" ng-model="vm.node.module_config[confdesc.name]" node="vm.node" autocomplete="true" button-style="true" dialog-title="Edit script" label="Edit script..."></modal-script-editor>
       <!-- time context -->
       <!--<input ng-switch-when="time" type="text" class="form-control" uib-datepicker-popup="HH:mm" ng-model="vm.node.module_config[confdesc.name]"></input>-->
 
