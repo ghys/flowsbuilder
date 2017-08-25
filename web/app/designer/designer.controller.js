@@ -5,8 +5,8 @@
         .module('app')
         .controller('DesignerCtrl', DesignerController);
 
-    DesignerController.$inject = ['$rootScope', '$scope', '$routeParams', '$interval', '$timeout', '$location', 'ItemsService', 'FlowService', 'RuleEngineService', 'FlowCompiler', 'ModulesTypesExtensions', 'prompt', '$filter', '$uibModal', 'Modelfactory', 'flowchartConstants', 'module_types', 'flowinfo', 'FileSaver', 'LocalFileReader'];
-    function DesignerController($rootScope, $scope, $routeParams, $interval, $timeout, $location, ItemsService, FlowService, RuleEngineService, FlowCompiler, ModulesTypesExtensions, prompt, $filter, $modal, Modelfactory, flowchartConstants, module_types, flowinfo, FileSaver, LocalFileReader) {
+    DesignerController.$inject = ['$rootScope', '$scope', '$q', '$routeParams', '$interval', '$timeout', '$location', 'ItemsService', 'EventSourceService', 'FlowService', 'RuleEngineService', 'FlowCompiler', 'ModulesTypesExtensions', 'prompt', '$filter', '$uibModal', 'Modelfactory', 'flowchartConstants', 'module_types', 'flowinfo', 'FileSaver', 'LocalFileReader'];
+    function DesignerController($rootScope, $scope, $q, $routeParams, $interval, $timeout, $location, ItemsService, EventSourceService, FlowService, RuleEngineService, FlowCompiler, ModulesTypesExtensions, prompt, $filter, $modal, Modelfactory, flowchartConstants, module_types, flowinfo, FileSaver, LocalFileReader) {
         var vm = this;
 
         vm.module_types = module_types;
@@ -14,7 +14,10 @@
         var deleteKeyCode = 46;
         var ctrlKeyCode = 17;
         var aKeyCode = 65;
+        var cKeyCode = 67;
         var sKeyCode = 83;
+        var vKeyCode = 86;
+        var xKeyCode = 88;
         var escKeyCode = 27;
         var ctrlDown = false;
 
@@ -33,25 +36,17 @@
 
             vm.callbacks = {
                 edgeDoubleClick: function () {
-                    console.log('Edge double clicked.');
                 },
                 edgeMouseOver: function () {
-                    console.log('mouseover')
                 },
                 isValidEdge: function (source, destination) {
                     return source.type === flowchartConstants.bottomConnectorType && destination.type === flowchartConstants.topConnectorType;
                 },
                 edgeAdded: function (edge) {
-                    console.log("edge added");
-                    console.log(edge);
                 },
                 nodeRemoved: function (node) {
-                    console.log("node removed");
-                    console.log(node);
                 },
                 edgeRemoved: function (edge) {
-                    console.log("edge removed");
-                    console.log(edge);
                 },
                 nodeCallbacks: {
                     'doubleClick': function (event) {
@@ -85,7 +80,21 @@
                 evt.stopPropagation();
                 evt.preventDefault();
             }
-            
+            if (evt.keyCode == xKeyCode && (evt.ctrlKey || evt.metaKey)) {
+                vm.cutNodes();
+                evt.stopPropagation();
+                evt.preventDefault();
+            }
+            if (evt.keyCode == cKeyCode && (evt.ctrlKey || evt.metaKey)) {
+                vm.copyNodes();
+                evt.stopPropagation();
+                evt.preventDefault();
+            }
+            if (evt.keyCode == vKeyCode && (evt.ctrlKey || evt.metaKey)) {
+                vm.pasteNodes();
+                evt.stopPropagation();
+                evt.preventDefault();
+            }
         };
 
         $rootScope.keyUp = function (evt) {
@@ -130,7 +139,7 @@
             reloadModel();
         }
 
-        vm.addNode = function (module, x, y) {
+        vm.addNode = function (module, x, y, config) {
             if (!module) return;
 
             var moduleName = module.replace('module-', '');
@@ -145,7 +154,7 @@
                 y: y,
                 type: category,
                 connectors: [],
-                module_config: {}
+                module_config: config || {}
             };
 
             switch (category) {
@@ -166,6 +175,30 @@
             vm.model.nodes.push(newNode);
         };
 
+        vm.copyNodes = function () {
+            if (!vm.flowchartselected) return;
+            vm.copiedNodes = [];
+            var selection = angular.copy(vm.flowchartselected);
+            angular.forEach(selection, function (obj) {
+                if (obj.id) { // nodes only, ignore edges
+                    obj.connectors = [];
+                    vm.copiedNodes.push(obj);
+                }
+            });
+        }
+
+        vm.cutNodes = function () {
+            vm.copyNodes();
+            vm.modelservice.deleteSelected();
+        }
+
+        vm.pasteNodes = function () {
+            if (!vm.copiedNodes || !vm.copiedNodes.length) return;
+            angular.forEach(vm.copiedNodes, function (node) {
+                vm.addNode('module-' + node.module_type_uid, node.x + 100, node.y + 40, angular.copy(node.module_config));
+            });
+        }
+
         vm.getNodeModuleType = function (node) {
             var moduleTypeUid = node.module_type_uid;
             return $filter('filter')(module_types.all, {uid: moduleTypeUid})[0];
@@ -173,41 +206,55 @@
 
         vm.saveFlow = function () {
             if (vm.currentFlowId === 'untitled') {
-                vm.saveFlowAs();
+                return vm.saveFlowAs();
             } else {
+                var deferred = $q.defer();
                 vm.saving = true;
-                FlowService.saveFlowAs(vm.currentFlowId, vm.model).then (function () {
+                FlowService.saveFlowAs(vm.currentFlowId, vm.model).then(function () {
                     vm.saving = false;
                     console.log('Save complete');
                     vm.justSaved = true;
+                    deferred.resolve();
                     $interval(function () { vm.justSaved = false; }, 2000);
+                }, function (rej) {
+                    deferred.reject(rej);
                 });
+
+                return deferred.promise;
             }
         };
 
         vm.saveFlowAs = function () {
+            var deferred = $q.defer();
             prompt({
                 title: 'Save flow on server',
                 message: 'Please specify the ID of your flow: use alphanumerical characters and underscores only!',
                 input: 'true',
-                label: 'Name',
+                label: 'Flow ID',
             }).then (function (newId) {
                 var isValidId = new RegExp(/^\w+$/).test(newId);
                 if (!isValidId || newId === 'untitled') {
                     prompt({ title: 'Invalid identifier', message: 'Use alphanumerical characters and underscores only! Example: my_new_flow' });
+                    deferred.reject('invalid_id');
                 } else {
                     vm.saving = true;
-                    FlowService.saveFlowAs(newId, vm.model).then (function () {
+                    FlowService.saveFlowAs(newId, vm.model).then(function () {
                         vm.saving = false;
                         vm.currentFlowId = newId;
                         vm.flowIds = FlowService.getFlowIds();
                         console.log('SaveAs complete');
                         vm.justSaved = true;
                         $interval(function () { vm.justSaved = false; }, 2000);
+                        deferred.resolve();
+                    }, function (rej) {
+                        deferred.reject(rej);
                     });
                 }
-            })
+            }, function (rej) {
+                deferred.reject('cancelled');
+            });
 
+            return deferred.promise;
         };
 
         vm.switchFlow = function (newId) {
@@ -228,7 +275,7 @@
 
             prompt({
                 title: 'Delete flow',
-                message: 'Are you sure you wish to delete this flow: ' + vm.currentFlowId + '?. This cannot be undone!'
+                message: 'Are you sure you wish to delete this flow: ' + vm.currentFlowId + '?. This cannot be undone! Important: Make sure you unpublish the flow (remove the rules) before deleting it!'
             }).then (function (newId) {
                 FlowService.deleteCurrentFlow();
                 vm.model = vm.currentFlow = FlowService.getCurrentFlow();
@@ -248,10 +295,12 @@
             vm.publishRequests = [];
             vm.publishResultClass = '';
 
-            var result = FlowCompiler.buildFlow(vm.model, vm.currentFlowId);
-            vm.lastBuildLogs = result.logs;
-            if (!result.error) vm.lastBuildResult = result.rules;
-            vm.lastBuildError = result.error;
+            vm.saveFlow().then (function () {
+                var result = FlowCompiler.buildFlow(vm.model, vm.currentFlowId);
+                vm.lastBuildLogs = result.logs;
+                if (!result.error) vm.lastBuildResult = result.rules;
+                vm.lastBuildError = result.error;
+            });
         };
 
         vm.publishFlow = function () {
@@ -263,23 +312,25 @@
             vm.publishRequests = [];
             vm.publishResultClass = '';
 
-            var result = FlowCompiler.buildFlow(vm.model, vm.currentFlowId);
-            vm.lastBuildError = result.error;
-            vm.lastBuildLogs = result.logs;
-            if (!result.error) {
-                vm.lastBuildResult = result.rules;
-                vm.publishResultClass = 'warning';
-                RuleEngineService.publishFlow(result.rules, vm.currentFlowId).then(function () {
-                    vm.publishResultClass = 'success';
-                }, function (err) {
-                    alert('An error occured while publishing: ' + err);
-                    vm.publishResultClass = 'danger';
-                }, function (progress) {
-                    //console.log(progress);
+            vm.saveFlow().then (function () {
+                var result = FlowCompiler.buildFlow(vm.model, vm.currentFlowId);
+                vm.lastBuildError = result.error;
+                vm.lastBuildLogs = result.logs;
+                if (!result.error) {
+                    vm.lastBuildResult = result.rules;
                     vm.publishResultClass = 'warning';
-                    vm.publishRequests = vm.publishRequests.concat(progress);
-                });
-            }
+                    RuleEngineService.publishFlow(result.rules, vm.currentFlowId).then(function () {
+                        vm.publishResultClass = 'success';
+                    }, function (err) {
+                        alert('An error occured while publishing: ' + err);
+                        vm.publishResultClass = 'danger';
+                    }, function (progress) {
+                        //console.log(progress);
+                        vm.publishResultClass = 'warning';
+                        vm.publishRequests = vm.publishRequests.concat(progress);
+                    });
+                }
+            });
         }
 
         vm.runFlow = function () {
@@ -307,6 +358,27 @@
         vm.exportToFile = function () {
             var data = new Blob([JSON.stringify(vm.model, null, 4)], { type: 'application/json;charset=utf-8'});
             FileSaver.saveAs(data, vm.currentFlowId + '.flow.json');
+        }
+
+        vm.sendDebuggerCommand = function () {
+            ItemsService.sendCmd(vm.debugItem, vm.debugCommand);
+        }
+
+        vm.toggleDebugger = function () {
+            vm.debuggerActive = !vm.debuggerActive;
+
+            vm.debuggerEvents = [];
+            if (vm.debuggerActive) {
+                EventSourceService.registerEventSource(function (event, topicparts, payload) {
+                    if (vm.debuggerActive) {
+                        $scope.$apply(function () {
+                            vm.debuggerEvents.unshift({ topic: event.topic, type: event.type, payload: payload });
+                        });
+                    }
+                })
+            } else {
+                EventSourceService.closeEventSource();
+            }
         }
     }
 

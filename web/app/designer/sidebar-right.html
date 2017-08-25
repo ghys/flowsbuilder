@@ -47,14 +47,14 @@
 <uib-accordion close-others="false" ng-hide="(vm.flowchartselected | filter:{'module_type_uid':'!!'}).length" class="hidden-sm hidden-xs">
   <uib-accordion-group class="accordion-panel" ng-init="configFlow.open = true" is-open="configFlow.open">
     <uib-accordion-heading>
-      Flow <small>({{vm.currentFlowId}})</small>
+      {{vm.currentFlowId}}
       <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': configFlow.open,
           'glyphicon-chevron-right': !formatShape.open}">
       </i>
     </uib-accordion-heading>
 
-    <uib-tabset justified="true" active="vm.activeNodeConfigTab">
-      <uib-tab heading="Properties" index="0">
+    <uib-tabset active="vm.activeNodeConfigTab" justified="true">
+      <uib-tab heading="Flow" index="0">
         <br />
         <div class="tab-content">
           <form name="flowForm">
@@ -70,7 +70,7 @@
         </div>
       </uib-tab>
 
-      <uib-tab heading="Build output" index="1">
+      <uib-tab heading="Build" index="1">
         <br />
         <div class="tab-content">
           <div class="col-sm-12" ng-if="vm.publishResultClass">
@@ -89,7 +89,7 @@
             <ul style="padding-left: 0">
               <li ng-repeat="line in vm.lastBuildLogs" ng-class="{ 'bg-danger': line.level === 'ERROR', 'bg-info': line.level === 'INFO' }">{{line.message}}</li>
             </ul>
-            <div ng-if="vm.lastBuildError" class="text-danger"><strong>Build failed<strong></div>
+            <div ng-if="vm.lastBuildError" class="text-danger"><strong>Build failed</strong></div>
             <div ng-if="!vm.lastBuildError && vm.lastBuildResult.length > 0"><strong>Built {{vm.lastBuildResult.length}} rule(s) successfully</strong>
             <br />
             <modal-script-editor ng-model="vm.lastBuildResult" json="true" button-style="false" readonly="true" dialog-title="Flow build results" label="View"></modal-script-editor></div>
@@ -97,6 +97,30 @@
             <!--<pre ng-repeat="rule in vm.lastBuildResult" style="font-size: 8pt">{{rule | json:1 }}</pre>-->
           </small>
         </div>
+      </uib-tab>
+
+      <uib-tab heading="Debug" index="2">
+        <br />
+        <div class="tab-content">
+          <button class="btn btn-danger btn-sm" ng-click="vm.toggleDebugger()">{{vm.debuggerActive ? 'Stop' : 'Start'}} debugger</button>
+          <br /><br />
+          <form ng-if="vm.debuggerActive" class="form-inline well well-sm">
+              <label>Send command</label>
+              <item-picker ng-model="vm.debugItem"></item-picker>
+              <input type="text" class="form-control" ng-model="vm.debugCommand" placeholder="Command" style="width: 100px"></input>
+              <button type="button" class="btn btn-primary" ng-click="vm.sendDebuggerCommand()">Send</button>
+          </form>
+        </div>
+        <small class="col-sm-12">
+          <ul style="padding-left: 0">
+            <li ng-repeat="event in vm.debuggerEvents">
+              <em class="text-info" title="{{event.topic}}">{{event.topic}}</em>
+              <ul style="padding-left: 16px">
+                <li ng-repeat="(key,val) in event.payload"><strong>{{key}}:</strong> <span title="{{val}}">{{val}}</span></li>
+              </ul>
+            </li>
+          </ul>
+        </small>
       </uib-tab>
 
     </uib-tabset>

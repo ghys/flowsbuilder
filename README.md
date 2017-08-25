@@ -14,7 +14,7 @@ An experimental GUI to build flows compiled into rules for the automation engine
 * Design your flow: drag and drop nodes from the toolbox on the left - add a trigger first, then conditions and actions; unlike simple rules, conditions might follow actions, and have an "else "path. Click on nodes and configure them as required in the right pane.
 * Save it on the server with the save button (Ctrl+S or Meta+S work too) - give it a name if asked.
 * Try to "build" your flow to check its validity by clicking the "Check" button or with the _Flow > Build only_ menu, if there is any error it will be reported in the build output pane. If successful, one or more rules will be built, **but not deployed yet to the rule engine** - this is your chance to review what's being done. You can click the small "View" link in the build output pane after a successful build to get the JSON output of the rules resulting from the compilation of your flow.
-* Click the "Publish" button to deploy it to as rules or with the _Flow > Build and publish_ menu - if there are previous rules existing, they will be removed first.
+* Click the "Publish" button or the _Flow > Build and publish_ menu to deploy the rules built from the flow - if there are previous rules existing, they will be removed first.
 * You can also unpublish the rules with the "unpublish" button or the _Flow > Unpublish_ menu
 
 ## Not supported
@@ -28,6 +28,6 @@ An experimental GUI to build flows compiled into rules for the automation engine
 - Check for dirtyness to avoid data loss if the flow is not saved, for instance when switching flows or closing the window
 - Import from file or from an existing rule
 - Snap to grid
-- Duplicate, copy-paste nodes
+- ~~Duplicate, copy-paste nodes~~
 - Undo/redo engine
 - ...

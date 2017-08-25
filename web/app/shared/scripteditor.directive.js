@@ -6,8 +6,8 @@
         .value('TernDefs', {})
         .directive('modalScriptEditor', ScriptEditorDirective);
 
-    ScriptEditorDirective.$inject = ['$rootScope', '$ocLazyLoad', '$uibModal', '$timeout', '$http', '$filter', 'FlowService', 'RuleEngineService', 'flowchartConstants', 'TernDefs'];
-    function ScriptEditorDirective($rootScope, $ocLazyLoad, $uibModal, $timeout, $http, $filter, FlowService, RuleEngineService, flowchartConstants, TernDefs) {
+    ScriptEditorDirective.$inject = ['$rootScope', '$ocLazyLoad', '$uibModal', '$timeout', '$http', '$filter', 'FlowService', 'RuleEngineService', 'ItemsService', 'flowchartConstants', 'TernDefs'];
+    function ScriptEditorDirective($rootScope, $ocLazyLoad, $uibModal, $timeout, $http, $filter, FlowService, RuleEngineService, ItemsService, flowchartConstants, TernDefs) {
         // Usage:
         //
         // Creates:
@@ -105,6 +105,57 @@
                 return defs;
             }
 
+            function ternComplete(file, query) {
+                var pos = tern.resolvePos(file, query.end);
+                var lit = tern.findExpressionAround(file.ast, null, pos, file.scope, 'Literal');
+                if (!lit || !lit.node) return;
+                var call = tern.findExpressionAround(file.ast, null, lit.node.start - 2, file.scope);
+                if (!call || !call.node) return;
+                if (call.node.type !== 'MemberExpression' || !call.node.object && !call.node.property) return;
+                if ((call.node.object.name === 'events' && call.node.property.name === 'postUpdate')
+                || (call.node.object.name === 'events' && call.node.property.name === 'sendCommand')
+                || (call.node.object.name === 'itemRegistry' && call.node.property.name === 'getItem')
+                || (call.node.object.name === 'ir' && call.node.property.name === 'getItem')) {
+                    console.log('Completing item names!');
+
+                    var before = lit.node.value.slice(0, pos - lit.node.start - 1);
+                    var matches = [];
+                    angular.forEach($filter('orderBy')(ItemsService.getItems(), 'name'), function (item) {
+                        if (item.name.length > before.length && item.name.toLowerCase().indexOf(before.toLowerCase()) >= 0) {
+                            if (query.types || query.docs || query.urls || query.origins) {
+                                var rec = {
+                                    name: JSON.stringify(item.name),
+                                    displayName: item.name,
+                                    doc: (item.label ? item.label + ' ' : '') + '[' + item.type + ']'
+                                };
+                                matches.push(rec);
+                                if (query.types) rec.type = "string";
+                                if (query.origins) rec.origin = item.name;
+                            }
+                        }
+                    });
+
+                    return {
+                        start: tern.outputPos(query, file, lit.node.start),
+                        end: tern.outputPos(query, file, pos + (file.text.charAt(pos) == file.text.charAt(lit.node.start) ? 1 : 0)),
+                        isProperty: false,
+                        completions: matches
+                    }
+                }
+            }
+
+            function registerTernPlugin() {
+                tern.registerPlugin("smarthome_helper", function(server, options) {
+                    server.mod.completeStrings = { maxLen: options && options.maxLength || 15,
+                                                seen: Object.create(null) };
+                    // server.on("reset", function() {
+                    // server.mod.completeStrings.seen = Object.create(null);
+                    // });
+                    //server.on("postParse", ternPostParse)
+                    server.on("completion", ternComplete)
+                });
+            }
+
             scope.editorOptions = {
                 lineNumbers: true,
                 matchBrackets: true,
@@ -143,16 +194,15 @@
                     scope.editorOptions.json = true;
                     scope.code = JSON.stringify(scope.code, null, 4);
                 }
-
-                scope.$on('modal.closing', function () {
-                    debugger;
-                });
                 
                 $ocLazyLoad.load(['codemirror']).then (function () {
+
+                    registerTernPlugin();
 
                     if (scope.autocomplete) {
                         scope.ternServer = new CodeMirror.TernServer({
                             defs: [TernDefs.ecmascript, TernDefs.smarthome, getScriptContextDefinition()],
+                            plugins: {'smarthome_helper': {}},
                             ecmaVersion: 5
                         });
                     }
@@ -182,7 +232,7 @@
                     $timeout(function () {
                         scope.refreshEditor = new Date();
                     });
-                    
+
                     modalInstance.result.then(function (result) {
                         scope.ngModel = result;
                         $rootScope.suspendKeyboardShortcuts = false;

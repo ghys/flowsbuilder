@@ -49,12 +49,12 @@
                 uid: uid,
                 name: name,
                 description: description,
-                visibility: 'VISIBLE',
+                visibility: 'HIDDEN',
                 enabled: true,
                 triggers: [],
                 conditions: [],
                 actions: [],
-                //tags: [context.flowId]
+                tags: [context.flowId]
             };
 
             context.rules.push(rule);
@@ -228,7 +228,7 @@
                         context.ruleUidPrefix = nextRuleUidThen;
 
                         context.currentRule.conditions.push({
-                            id: context.ruleModuleUidCounter++,
+                            id: node.id,
                             label: nodeName,
                             description: node.description,
                             inputs: {},
@@ -251,7 +251,7 @@
                             throw 'Condition module type ' + node.module_type_uid + ' has no known negation function! "Else" branches cannot be used with this module type';
 
                         context.currentRule.conditions.push({
-                            id: context.ruleModuleUidCounter++,
+                            id: node.id,
                             label: 'NOT(' + nodeName + ')',
                             description: node.description,
                             inputs: {},
@@ -266,7 +266,7 @@
                 case 'action':
                     // simply add the action to the current rule
                     context.currentRule.actions.push({
-                        id: context.ruleModuleUidCounter++,
+                        id: node.id,
                         label: nodeName,
                         description: node.description,
                         inputs: {},
