@@ -49,12 +49,12 @@
             return $http.get('/rest/rules');
         }
 
-        function getRulesWithPrefix(prefix) {
-            return $http.get('/rest/rules', { params: { prefix: prefix }});
+        function getRulesWithPrefix(prefix, tags) {
+            return $http.get('/rest/rules', { params: { prefix: prefix, tags: tags }});
         }
 
         function unpublishFlow(prefix) {
-            return getRulesWithPrefix(prefix).then(function (resp) {
+            return getRulesWithPrefix(prefix, prefix).then(function (resp) {
                 if (resp.data) {
                     // var matchingRules = $filter('filter')(resp.data, function (r) {
                     //     return r.uid.indexOf(prefix) === 0;

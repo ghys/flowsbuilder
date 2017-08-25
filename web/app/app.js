@@ -48,7 +48,6 @@
             });
 
             $ocLazyLoadProvider.config({
-                debug: true,
                 serie: true,
                 modules: [{
                     name: 'codemirror',
