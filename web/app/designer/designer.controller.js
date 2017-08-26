@@ -19,6 +19,7 @@
         var vKeyCode = 86;
         var xKeyCode = 88;
         var escKeyCode = 27;
+        var returnKeyCode = 13;
         var ctrlDown = false;
 
         function getModuleTypeCategory(moduleType) {
@@ -366,18 +367,51 @@
 
         vm.toggleDebugger = function () {
             vm.debuggerActive = !vm.debuggerActive;
-
+            vm.debuggerWatches = {};
             vm.debuggerEvents = [];
             if (vm.debuggerActive) {
+                ItemsService.reloadItems();
                 EventSourceService.registerEventSource(function (event, topicparts, payload) {
                     if (vm.debuggerActive) {
                         $scope.$apply(function () {
-                            vm.debuggerEvents.unshift({ topic: event.topic, type: event.type, payload: payload });
+                            if (event.type !== 'ItemStateEvent' && event.type !== 'ThingStatusInfoEvent') {
+                                vm.debuggerEvents.unshift({ topic: event.topic, topicparts: topicparts, oldStatus: event.oldStatus, newStatus: event.newStatus, type: event.type, payload: payload });
+                            }
+                            if (vm.debuggerEvents.length > 500) vm.debuggerEvents.pop();
+                            if (event.type === 'ItemStateEvent' || event.type === 'ItemStateChangedEvent' || event.type === 'GroupItemStateChangedEvent') {
+                                var newstate = payload.value;
+                                var name = topicparts[2];
+                                if (vm.debuggerWatches[name]) {
+                                    vm.debuggerWatches[name] = newstate;
+                                }
+                            }
                         });
                     }
-                })
+                });
+                vm.activeNodeConfigTab = 2;
             } else {
                 EventSourceService.closeEventSource();
+                vm.activeNodeConfigTab = 0;
+            }
+        }
+
+        vm.addDebuggerWatch = function (name) {
+            vm.debuggerWatches[name] = ItemsService.getItem(name).state;
+        }
+        vm.removeDebuggerWatch = function (name) {
+            delete vm.debuggerWatches[name];
+        }
+        vm.debuggerWatchKeyDown = function (name, $event) {
+            if ($event.keyCode === escKeyCode && vm.debuggerForm['watchState_'+name]) {
+                vm.debuggerForm['watchState_'+name].$rollbackViewValue();
+                $event.stopPropagation();
+                $event.preventDefault();
+            }
+            if ($event.keyCode === returnKeyCode && vm.debuggerForm['watchState_'+name]) {
+                vm.debuggerForm['watchState_'+name].$commitViewValue();
+                ItemsService.sendCmd(name, vm.debuggerForm['watchState_'+name].$modelValue);
+                $event.stopPropagation();
+                $event.preventDefault();
             }
         }
     }

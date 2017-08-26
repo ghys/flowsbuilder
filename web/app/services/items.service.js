@@ -104,42 +104,5 @@
             loadItems();
         }
         
-        function registerEventSource() {
-            if (typeof(EventSource) !== "undefined") {
-                var source = new EventSource('/rest/events');
-                liveUpdatesEnabled = true;
-
-                source.onmessage = function (event) {
-                    try {
-                        var evtdata = JSON.parse(event.data);
-                        var topicparts = evtdata.topic.split('/');
-
-                        if (evtdata.type === 'ItemStateEvent' || evtdata.type === 'ItemStateChangedEvent' || evtdata.type === 'GroupItemStateChangedEvent') {
-                            var payload = JSON.parse(evtdata.payload);
-                            var newstate = payload.value;
-                            var item = $filter('filter')($rootScope.items, {name: topicparts[2]}, true)[0];
-                            if (item && item.state !== payload.value) {
-                                $rootScope.$apply(function () {
-                                    console.log("Updating " + item.name + " state from " + item.state + " to " + payload.value);
-                                    item.state = payload.value;
-
-                                    // no transformation on state
-                                    $rootScope.$emit('openhab-update', item);
-                                });
-                            }
-                        }
-                    } catch (e) {
-                        console.warn('SSE event issue: ' + e.message);
-                    }
-                }
-                source.onerror = function (event) {
-                    console.error('SSE error, closing EventSource');
-                    liveUpdatesEnabled = false;
-                    this.close();
-                    $timeout(loadItems, 5000);
-                }
-            }
-        }
-
     }
 })();
