@@ -116,3 +116,32 @@
 .modal-script-editor .CodeMirror {
     height: 600px;
 }
+
+.debugger-watch {
+    margin-top: 5px;
+    margin-bottom: 0;
+
+  td {
+      width: 105px;
+  }
+  label {
+    line-height: 1.7;
+    margin-bottom: 0;
+    font-weight: normal;
+    //overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100px;
+  }
+
+  .input-sm {
+    height: auto;
+    padding: 2px 5px;
+    margin: 0;
+    width: 90px;
+  }
+
+  .debugger-watch-close {
+    padding: 2px 3px;
+    margin-left: -2px;
+  }
+}

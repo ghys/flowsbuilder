@@ -128,6 +128,9 @@
           <li class="disabled">
             <a href="" ng-click="vm.runFlow()" ng-click=""><span class="glyphicon glyphicon-play-circle"></span>&nbsp;Build and run <small>(todo)</small></a>
           </li>
+          <li>
+            <a href="" ng-click="vm.toggleDebugger()" ng-click=""><span class="glyphicon" ng-class="{'glyphicon-eye-open': !vm.debuggerActive, 'glyphicon-eye-close': vm.debuggerActive}"></span>&nbsp;{{(vm.debuggerActive ? 'Hide' : 'Show')}} the debugger</a>
+          </li>
           <li class="divider"></li>
           <li>
             <a href="" ng-click="vm.unpublishFlow()" ng-click=""><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Unpublish</a>

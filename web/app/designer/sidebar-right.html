@@ -99,21 +99,78 @@
         </div>
       </uib-tab>
 
-      <uib-tab heading="Debug" index="2">
+      <uib-tab heading="Debug" index="2" ng-show="vm.debuggerActive">
         <br />
         <div class="tab-content">
-          <button class="btn btn-danger btn-sm" ng-click="vm.toggleDebugger()">{{vm.debuggerActive ? 'Stop' : 'Start'}} debugger</button>
-          <br /><br />
-          <form ng-if="vm.debuggerActive" class="form-inline well well-sm">
-              <label>Send command</label>
+          <form ng-if="vm.debuggerActive" name="vm.debuggerForm" class="form-inline well well-sm">
+              <label>Send command & watch</label>
               <item-picker ng-model="vm.debugItem"></item-picker>
-              <input type="text" class="form-control" ng-model="vm.debugCommand" placeholder="Command" style="width: 100px"></input>
-              <button type="button" class="btn btn-primary" ng-click="vm.sendDebuggerCommand()">Send</button>
+              <input type="text" class="form-control input-sm" ng-model="vm.debugCommand" placeholder="Command" style="width: 100px"></input>
+              <button type="submit" class="btn btn-sm btn-primary" ng-click="vm.sendDebuggerCommand()">Send</button>
+              <button type="button" class="btn btn-sm btn-info" ng-click="vm.addDebuggerWatch(vm.debugItem)">Watch</button>
+              <table class="table table-condensed debugger-watch">
+                <tr ng-repeat="(name, state) in vm.debuggerWatches">
+                  <td class="itemname"><label><small>{{name}}</small></label></td>
+                  <td>
+                    <input class="form-control input-sm" name="watchState_{{name}}"
+                      ng-model="state" ng-model-options="{ updateOn: 'blur' }"
+                      ng-keydown="vm.debuggerWatchKeyDown(name, $event)"></input>
+                    <button class="btn btn-sm btn-danger debugger-watch-close" ng-click="vm.removeDebuggerWatch(name)">X</button>
+                  </td>
+                </tr>
+              </table>
           </form>
         </div>
         <small class="col-sm-12">
           <ul style="padding-left: 0">
-            <li ng-repeat="event in vm.debuggerEvents">
+            <li ng-repeat="event in vm.debuggerEvents" ng-if="!vm.debuggerRawEvents">
+              <span ng-switch="event.type">
+                <span ng-switch-when="ItemStateEvent">
+                  Item <a ng-click="vm.addDebuggerWatch(event.topicparts[2])" class="label label-primary">{{event.topicparts[2]}}</a> state is now <code>{{event.payload.value}}</code>
+                </span>
+                <span ng-switch-when="ItemCommandEvent">
+                  Item <a ng-click="vm.addDebuggerWatch(event.topicparts[2])" class="label label-primary">{{event.topicparts[2]}}</a> <strong>received command</strong> <code>{{event.payload.value}}</code>
+                </span>
+                <span ng-switch-when="ItemStateChangedEvent">
+                  Item <a ng-click="vm.addDebuggerWatch(event.topicparts[2])" class="label label-primary">{{event.topicparts[2]}}</a> changed from
+                    <code>{{event.payload.oldValue}}</code> to <code>{{event.payload.value}}</code>
+                </span>
+                <span ng-switch-when="GroupItemStateChangedEvent">
+                  Group <a ng-click="vm.addDebuggerWatch(event.topicparts[2])" class="label label-primary">{{event.topicparts[2]}}</a> changed from
+                    <code>{{event.payload.oldValue}}</code> to <code>{{event.payload.value}}</code>
+                </span>
+                <span ng-switch-when="ThingStatusInfoEvent">
+                  Thing <span class="label label-info">{{event.topicparts[2]}}</span> status is
+                    <code>{{event.payload.status}}</code> <em ng-if="event.payload.statusDetail !== 'NONE'">({{event.payload.statusDetail}})</em> <em ng-if="event.payload.description">({{event.payload.description}})</em>
+                </span>
+                <span ng-switch-when="ThingStatusInfoChangedEvent">
+                  Thing <span class="label label-info">{{event.topicparts[2]}}</span> status changed from
+                    <code>{{event.payload[1].status}}</code> <em ng-if="event.payload[1].statusDetail !== 'NONE'">({{event.payload[1].statusDetail}})</em> <em ng-if="event.payload[1].description">({{event.payload[1].description}})</em>
+                    to
+                    <code>{{event.payload[0].status}}</code> <em ng-if="event.payload[0].statusDetail !== 'NONE'">({{event.payload[0].statusDetail}})</em> <em ng-if="event.payload[0].description">({{event.payload[0].description}})</em>
+                </span>
+                <span ng-switch-when="RuleStatusInfoEvent">
+                  Rule <span class="label label-warning">{{event.topicparts[2]}}</span> status is
+                    <code>{{event.payload.status}}</code> <em ng-if="event.payload.statusDetail !== 'NONE'">({{event.payload.statusDetail}})</em>
+                </span>
+                <span ng-switch-when="RuleAddedEvent">
+                  Rule <span class="label label-warning">{{event.payload.uid}}</span> was added
+                </span>
+                <span ng-switch-when="RuleRemovedEvent">
+                  Rule <span class="label label-warning">{{event.payload.uid}}</span> was removed
+                </span>
+                <span ng-switch-when="RuleUpdatedEvent">
+                  Rule <span class="label label-warning">{{event.payload.uid}}</span> was updated
+                </span>
+                <span ng-switch-default>
+                  <em class="text-info" title="{{event.topic}}">{{event.topic}}</em>
+                  <ul style="padding-left: 16px">
+                    <li><strong>type:</strong> {{event.type}}
+                    <li ng-repeat="(key,val) in event.payload"><strong>{{key}}:</strong> <span title="{{val}}">{{val}}</span></li>
+                  </ul>
+                </span>
+              </span>
+            <li ng-repeat="event in vm.debuggerEvents" ng-if="vm.debuggerRawEvents">
               <em class="text-info" title="{{event.topic}}">{{event.topic}}</em>
               <ul style="padding-left: 16px">
                 <li ng-repeat="(key,val) in event.payload"><strong>{{key}}:</strong> <span title="{{val}}">{{val}}</span></li>
